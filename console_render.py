@@ -13,14 +13,8 @@ class ConsoleRender(object):
 
     @staticmethod
     def player_input(player, field, players):
-        while True:
-            ConsoleRender.draw_field(field, players)
-            col = input(f'\nTurn {player}: ')
-            if col.isdigit():
-                return int(col)
-            else:
-                print('Invalid input')
-                time.sleep(1)
+        ConsoleRender.draw_field(field, players)
+        return input(f'\nTurn {player}: ')
 
     @staticmethod
     def win(player, line, field, players):

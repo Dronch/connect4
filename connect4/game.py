@@ -68,10 +68,11 @@ class Game(object):
             while True:
                 try:
                     col = input_func(self.players[player], self.field, self.players)
-                    out_of_field = col not in range(self.cols)
-                    if out_of_field:
+
+                    if not col.isdigit() or int(col) not in range(self.cols):
                         raise InvalidInputError(f'Please enter col number: 0-{self.cols - 1}')
-                    self.turn(player, col)
+
+                    self.turn(player, int(col))
                     break
                 except InvalidInputError as e:
                     error_callback(str(e))
