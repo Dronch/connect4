@@ -7,7 +7,7 @@ from .errors import InvalidInputError
 
 class Game(object):
 
-    def __init__(self, rows: int, cols: int, players: typing.Tuple[str], goal: int):
+    def __init__(self, rows: int, cols: int, players: tuple, goal: int):
 
         if len(players) < 2:
             raise ValueError('More than 2 players required')
