@@ -1,12 +1,13 @@
 import numpy as np
 import itertools
+import typing
 
 from .errors import InvalidInputError
 
 
 class Game(object):
 
-    def __init__(self, rows: int, cols: int, players: tuple, goal: int):
+    def __init__(self, rows: int, cols: int, players: typing.Tuple[str], goal: int):
 
         if len(players) < 2:
             raise ValueError('More than 2 players required')
@@ -18,6 +19,7 @@ class Game(object):
         self.players = {idx + 1: name for idx, name in enumerate(players)}
 
     def turn(self, player: int, col: int):
+        """Updates field on player turn"""
         empty = len(list(itertools.filterfalse(lambda x: x > 0, self.field[:, col])))
 
         if empty == 0:
@@ -25,7 +27,8 @@ class Game(object):
 
         self.field[empty - 1][col] = player
 
-    def line(self, x, y, direction):
+    def line(self, x: int, y: int, direction: tuple):
+        """Generator to get line of items, starting from x, y"""
         player = self.field[x, y]
         yield x, y
 
@@ -38,7 +41,8 @@ class Game(object):
 
             yield x, y
 
-    def winner(self, player):
+    def winner(self, player: int):
+        """Check winner. Player can win after his turn, so no need to check other players."""
         visited = []
         for x in range(self.rows):
             for y in range(self.cols):
@@ -57,7 +61,8 @@ class Game(object):
 
                         visited += line
 
-    def play(self, input_func, win_callback, error_callback):
+    def play(self, input_func: typing.Callable, win_callback: typing.Callable, error_callback: typing.Callable):
+        """Game cycle until someone wins"""
         for player in itertools.cycle(self.players):
 
             while True:
@@ -74,5 +79,5 @@ class Game(object):
             line = self.winner(player)
 
             if line:
-                win_callback(self.players[player], line, self.field)
-                break
+                win_callback(self.players[player], line, self.field, self.players)
+                return
